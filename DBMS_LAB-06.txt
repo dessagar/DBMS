@@ -1,0 +1,87 @@
+SQL> create table O_RollCall(roll_no number(2),name varchar2(25),age number(2),marks number(3));
+
+Table created.
+
+SQL> create table N_RollCall(roll_no number(2),name varchar2(25),age number(2),marks number(3));
+
+Table created.
+
+SQL> insert into O_RollCall values(27,'Vaibhavi',20,100);
+
+1 row created.
+
+SQL> insert into O_RollCall values(37,'Mohana',20,190);
+
+1 row created.
+
+SQL> insert into O_RollCall values(42,'Aditi',19,187);
+
+1 row created.
+
+SQL> insert into O_RollCall values(01,'Anushka',20,175);
+
+1 row created.
+
+SQL> insert into N_RollCall values(27,'Vaibhavi',20,100);
+
+1 row created.
+
+SQL> insert into N_RollCall values(29,'Advait',20,190);
+
+1 row created.
+
+SQL> insert into N_RollCall values(26,'Prasad',20,185);
+
+1 row created.
+
+SQL> insert into N_RollCall values(04,'Safal',20,179);
+
+1 row created.
+
+SQL> select * from O_RollCall;
+
+   ROLL_NO NAME                             AGE      MARKS
+---------- ------------------------- ---------- ----------
+        27 Vaibhavi                          20        100
+        37 Mohana                            20        190
+        42 Aditi                             19        187
+         1 Anushka                           20        175
+
+SQL> select * from N_RollCall;
+
+   ROLL_NO NAME                             AGE      MARKS
+---------- ------------------------- ---------- ----------
+        27 Vaibhavi                          20        100
+        29 Advait                            20        190
+        26 Prasad                            20        185
+         4 Safal                             20        179
+
+SQL> set serveroutput on;
+SQL> declare
+  2     roll O_RollCall.roll_no%type;
+  3     a O_RollCall%Rowtype ;
+  4  begin
+  5     For a in(select roll_no,name,age,marks from O_RollCall where roll_no not in(select roll_no 		from N_RollCall))
+  6     loop
+  7             insert into N_RollCall values(a.roll_no,a.name,a.age,a.marks);
+  8     end loop;
+  9     dbms_output.put_line('values copied');
+ 10  end;
+ 11  /
+values copied
+
+PL/SQL procedure successfully completed.
+
+SQL> select *from n_rollcall;
+
+   ROLL_NO NAME                             AGE      MARKS
+---------- ------------------------- ---------- ----------
+        27 Vaibhavi                          20        100
+        29 Advait                            20        190
+        26 Prasad                            20        185
+         4 Safal                             20        179
+        37 Mohana                            20        190
+        42 Aditi                             19        187
+         1 Anushka                           20        175
+
+7 rows selected.

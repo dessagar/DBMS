@@ -1,0 +1,50 @@
+SQL> create table library(book_id number(10),book_name varchar2(40),author varchar2(30));
+SQL> create table library_audit(action varchar2(10),book_id number(10),book_name varchar2(40),author varchar2(30),audit_timestamp TIMESTAMP);
+
+SQL> insert into library values(101,'DBMS','M.S.Birajdar');
+
+1 row created.
+
+SQL> insert into library values(102,'CNS','w.p.wapte');
+
+1 row created.
+=====================================================================================================
+
+SQL> create or replace trigger library_delete_audit
+  2  after delete on library
+  3  for each row
+  4  begin
+  5     insert into library_audit 	values('DELETE',:old.book_id,:old.book_name,:old.author,SYSTIMESTAMP);
+  6  end;
+  7  /
+
+Trigger created.
+
+SQL> create or replace trigger library_update_audit
+  2  after update on library
+  3  for each row
+  4  begin
+  5     insert into library_audit 		values('UPDATE',:old.book_id,:old.book_name,:old.author,SYSTIMESTAMP);
+  6  end;
+  7  /
+
+Trigger created.
+====================================================================================
+
+SQL> update library set book_id=100 where book_name='DBMS';
+
+1 row updated.
+
+SQL> select *from library_audit;
+
+ACTION        BOOK_ID BOOK_NAME
+---------- ---------- ----------------------------------------
+AUTHOR
+------------------------------
+AUDIT_TIMESTAMP
+---------------------------------------------------------------------------
+UPDATE            101 DBMS
+M.S.Birajdar
+25-OCT-23 12.20.39.984000 PM
+
+

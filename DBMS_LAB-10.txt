@@ -1,0 +1,24 @@
+use mystudents 
+================================
+db.student.createIndex({name:1},{name:"Student's names"}) 
+db.employee.createIndex({salary:-1},{name:"emp-salary"}) 
+
+db.student.getIndexes() 
+=================================================
+
+db.student.find() 	
+==================================================
+db.student.dropIndex("Student's names")
+==================================================
+
+AGGREGATION :=
+
+1.$match: 
+db.student.aggregate([{$match:{sports:{$in:["Football","Cricket"]}}}])
+
+2.$sort:
+db.student.aggregate({$sort:{marks:-1}}) 
+
+3.$count: 
+db.student.aggregate([{$match:{sports:{$in:["Football","Cricket"]}}},{$count:"totalCount"}]) 
+

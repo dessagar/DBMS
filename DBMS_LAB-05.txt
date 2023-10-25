@@ -1,0 +1,52 @@
+SQL> CREATE TABLE Student (StudentID NUMBER PRIMARY KEY,StudentName VARCHAR2(10),Marks NUMBER);
+
+
+CREATE OR REPLACE FUNCTION funcGradeCategory(marks IN NUMBER) RETURN VARCHAR2 IS
+  2          grade VARCHAR2(20);
+  3      BEGIN
+  4          IF marks >= 990 THEN
+  5              grade := 'Distinction';
+  6          ELSIF marks >= 900 THEN
+  7              grade := 'First Class';
+  8          ELSIF marks >= 825 THEN
+  9              grade := 'Higher Second Class';
+ 10         ELSE
+ 11             grade := 'Fail';
+ 12         END IF;
+ 13         RETURN grade;
+ 14     END funcGradeCategory;
+ 15  /
+
+
+SQL> SELECT funcGradeCategory(950) AS GradeCategory FROM DUAL;
+
+GRADECATEGORY
+--------------------------------------------------------------------------------
+First Class
+
+SQL> SELECT funcGradeCategory(1050) AS GradeCategory FROM DUAL;
+
+GRADECATEGORY
+--------------------------------------------------------------------------------
+Distinction
+
+==========================================================================================
+
+SQL> CREATE OR REPLACE PROCEDURE procGrade AS
+  2      BEGIN
+  3      FOR studentrec IN (SELECT StudentID, StudentName, Marks FROM Student) LOOP
+  4              DBMS_OUTPUT.PUT_LINE('Student ' || studentrec.StudentName || ' (ID: ' || studentrec.StudentID || ') has achieved ' || funcGradeCategory(studentrec.Marks) || ' grade.');
+  5          END LOOP;
+  6      END procGrade;
+  7  /
+
+Procedure created.
+
+SQL> EXEC procGrade;
+
+SQL> SET SERVEROUTPUT ON;
+SQL> BEGIN
+  2        procGrade;
+  3  END;
+  4      /
+

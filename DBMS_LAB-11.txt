@@ -1,0 +1,20 @@
+use mystudents 
+
+db.createCollection("student_info")
+
+db.student_info.insertOne({
+... name:"Vaibhavi",
+... roll_no:27,
+... Year:"Second",
+... sports:"Badminton",
+... marks:65})
+
+MAPREDUCE := 
+
+var map=function(){emit(this.Year,this.marks);};
+
+var reduce=function(Year,marks){return Array.sum(marks);};
+
+db.student_info.mapReduce(map,reduce,{out:"result"});
+
+db.result.find() 

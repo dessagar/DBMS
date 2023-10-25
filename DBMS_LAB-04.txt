@@ -1,0 +1,100 @@
+ create table borrower(roll_no number(2),name varchar2(25),date_of_issue date,name_of_book varchar2(20),status varchar2(10));
+
+Table created.
+
+SQL> create table fine(roll_no number(2),date_fine date,amount number(5));
+
+Table created.
+
+SQL> insert into borrower values(27,'Vaibhavi','20-september-2022','IOT','I');
+
+1 row created.
+
+SQL> insert into borrower values(37,'Mohana','09-september-2022','HCI','I');
+
+1 row created.
+
+SQL> insert into borrower values(42,'Aditi','05-october-2022','CNS','I');
+
+1 row created.
+
+SQL> insert into borrower values(01,'Anushka','27-september-2022','SPOS','I');
+
+1 row created.
+
+SQL> select * from borrower;
+
+   ROLL_NO NAME                      DATE_OF_I  NAME_OF_BOOK         STATUS
+---------- ------------------------- --------- -------------------- ----------
+        27 Vaibhavi                  20-SEP-22    IOT                  I
+        37 Mohana                    09-SEP-22    HCI                  I
+        42 Aditi                     05-OCT-22    CNS                  I
+         1 Anushka                   27-SEP-22    SPOS                 I
+
+SQL> create or replace function calfine(days number)
+  2  return number is
+  3  amount number:=0;
+  4  begin
+  5     IF(days>15 and days<30) then
+  6             amount:=days*5;
+  7     ELSIF(days>30) then
+  8             amount:=days*50;
+  9     ELSE
+ 10             amount:=0;
+ 11     END IF;
+ 12  return amount;
+ 13  end;
+ 14  /
+
+Function created.
+
+
+declare
+	roll_num number(2); 
+	book_name varchar2(20);
+	nm varchar2(25);
+	s varchar2(10); 
+	date_fine date; 
+	d_issue date; 
+	days number(10);
+	amt number(5);
+begin
+	roll_num:=&roll_num;
+ 	book_name:=&book_name;
+	select roll_no,name,name_of_book,status,date_of_issue into roll_num,nm,book_name,s,d_issue 	from borrower where roll_no=roll_num;
+
+	days:=sysdate-d_issue;
+ 	dbms_output.put_line('Roll no = '||roll_num);
+ 	dbms_output.put_line('Name = '||nm);
+ 	dbms_output.put_line('Book name = '||book_name);
+ 	dbms_output.put_line('Status '||s); 
+ 	dbms_output.put_line('Days are '||days);
+	amt:=calfine(days); 
+	dbms_output.put_line('Fine amount is '||amt);
+	
+	IF(amt>0) THEN
+		insert into fine values(roll_num,sysdate,amt); 
+		dbms_output.put_line('One row inserted');
+		update borrower set status='R' where roll_num=roll_no; 
+	END IF;
+	exception
+		When no_data_found then
+ 			dbms_output.put_line('Record not found');
+
+end;
+/
+
+Enter value for roll_num: 37
+old  11:        roll_num:=&roll_num;
+new  11:        roll_num:=37;
+Enter value for book_name: 'HCI'
+old  12:        book_name:=&book_name;
+new  12:        book_name:='HCI';
+Roll no = 37
+Name = Mohana
+Book name = HCI
+Status I
+Days are 411
+Fine amount is 20550
+
+PL/SQL procedure successfully completed.

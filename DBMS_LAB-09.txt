@@ -1,0 +1,80 @@
+use mystudents 
+===================================
+db.createCollection("student")
+=============================================================
+db.student.insertOne({
+... name:"Vaibhavi",
+... roll_no:1,
+... Year:"Third",
+... sports:"Badminton",
+... marks:80})
+=================================================================================
+db.student.insertMany([
+    {
+... name:"Mohana",
+... roll_no:8,
+... Year:"Second",
+... sports:"Badminton",
+... marks:55
+... },
+... {
+... name:"Advait",
+... roll_no:2,
+... Year:"First",
+... sports:"Football",
+... marks:74
+... },
+... {
+... name:"Prasad",
+... roll_no:3,
+... Year:"Second",
+... sports:"Cricket",
+... marks:50
+... },
+... {
+... name:"Aditi",
+... roll_no:4,
+... Year:"Third",
+... sports:"Badminton",
+... marks:30
+... },
+... {
+... name:"Anushka",
+... roll_no:5,
+... Year:"First",
+... sports:"Football",
+... marks:90
+... },
+... {
+... name:"Safal",
+... roll_no:6,
+... Year:"First",
+... sports:"Cricket",
+... marks:63
+... },
+... {
+... name:"Anvesh",
+... roll_no:7,
+... Year:"Third",
+... sports:"Badminton",
+... marks:32
+... }])
+=======================================================================================
+
+db.student.find({Year:"Third"})
+db.student.find({sports:"Football"}) 
+====================================================================================
+
+db.student.updateOne({roll_no:2},{$set:{marks:70}})
+db.posts.updateOne( { title: "Post Title 1" }, { $set: { likes: 2 } } ) 
+db.posts.updateMany({}, { $inc: { likes: 1 } })
+
+db.student.find({roll_no:2}) 
+db.posts.deleteOne({ title: "Post Title 5" })
+db.posts.deleteMany({ category: "Technology" })
+
+==================================================================================
+
+db.student.updateOne({"name":"sagar"},{$set:{"salary":50000}})
+
+
